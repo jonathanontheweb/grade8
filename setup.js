@@ -1,25 +1,33 @@
-let studentCode = "";  // This will store the student's code
+// This will load the p5.js library
+(function() {
+  var script = document.createElement('script');
+  script.src = "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js";
+  script.onload = function() {
+    setupCanvas();  // Call setup function after p5.js is loaded
+  };
+  document.head.appendChild(script);
+})();
 
-function setup() {
-    createCanvas(800, 600);  // Set the canvas size
-    noLoop();  // Ensure `draw()` is only called once unless manually triggered
-}
+// Custom code for handling student input
+function setupCanvas() {
+  function setup() {
+    createCanvas(800, 600); // Canvas initialization
+    noLoop(); // Ensures `draw()` runs only once unless `redraw()` is called
+  }
 
-// The `draw()` function is automatically called by p5.js, but we will run student's code inside it
-function draw() {
-    background(255);  // Set a white background
-
-    // Dynamically run the student's code
+  function draw() {
+    background(255);  // Set a default background
     try {
-        eval(studentCode);  // Inject student code into the `draw()` function
+      // Dynamically inject the student's code
+      let studentCode = document.getElementById("student-code").value;
+      eval(studentCode);  // Run the student's code inside p5.js
     } catch (err) {
-        console.error("Error in student code:", err);  // Log errors in the student's code
+      console.error("Error in student code:", err);
     }
-}
+  }
 
-// Function to update the student's code and trigger the drawing again
-function updateStudentCode() {
-    const code = document.getElementById("student-code").value;  // Get code from textarea
-    studentCode = code;  // Store it in the global variable
-    redraw();  // Trigger a re-draw to apply the new student code
+  // Function to update student code and trigger redrawing
+  window.updateStudentCode = function() {
+    redraw();  // Trigger a re-draw to apply new student code
+  }
 }
